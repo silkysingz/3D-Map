@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cesium Globe Example</title>
+  <!-- Include the CesiumJS JavaScript and CSS files -->
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.116/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.116/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+    /* Add any custom CSS styles here */
+    #cesiumContainer {
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <!-- Create a container for the Cesium globe -->
+  <div id="cesiumContainer"></div>
+
+  <!-- JavaScript code for initializing Cesium -->
+  <script type="module">
+    // Your access token can be found at: https://ion.cesium.com/tokens.
+    // This is the default access token from your ion account
+
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0YTcyNjZmYS1mOWM0LTQ0ZWEtOGI2NC1iYmQ2MTNiZmRjZmYiLCJpZCI6MTQwOTA4LCJpYXQiOjE3MTMyNjk2MDZ9.3G1Hd51tfiu3GHYqDL-i0uQC0QG2BYGHr4pnDpL3MJg';
+
+    async function initializeCesium() {
+      // Initialize the Cesium Viewer in the HTML element with the `cesiumContainer` ID.
+      const viewer = new Cesium.Viewer('cesiumContainer', {
+        terrain: Cesium.Terrain.fromWorldTerrain(),
+      });    
+
+      // Fly the camera to Banjul, The Gambia, at the given longitude, latitude, and height.
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(-16.5877, 13.4550, 400),
+        orientation: {
+          heading: Cesium.Math.toRadians(0.0),
+          pitch: Cesium.Math.toRadians(-15.0),
+        }
+      });
+
+      // Add Cesium OSM Buildings, a global 3D buildings layer.
+      const buildingTileset = await Cesium.createOsmBuildingsAsync();
+      viewer.scene.primitives.add(buildingTileset);   
+    }
+
+    initializeCesium().catch(error => {
+      console.error('An error occurred during Cesium initialization:', error);
+    });
+  </script>
+</body>
+</html>
